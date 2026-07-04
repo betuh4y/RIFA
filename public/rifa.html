@@ -164,13 +164,23 @@ footer{text-align:center;padding:20px;font-size:12px;color:var(--muted)}
   <span class="hero-paw">🐾</span>
   <span class="hero-paw">🐾</span>
   <!-- Para usar foto: <img class="cat-avatar" src="URL_DA_FOTO_DA_AVA"> -->
-  <span class="cat-emoji-hero">🐱</span>
+ <span class="cat-emoji-hero">
+  <img class="cat-avatar" src="https://i.postimg.cc/0y9JMsrz/Whats-App-Image-2026-06-30-at-09-37-32.jpg" alt="Foto da minha gata">
+</span>
   <h1>Rifa da <span>Ava</span></h1>
-  <p>Cada número vale R$&nbsp;10 · Ajude a garantir os cuidados da nossa gatinha querida 💕</p>
+  <p>ATENÇÃO COLOQUE CORRETAMENTE SEU NOME E NÚMERO DE TELEFONE.
+Cada número custa R$ 10,00.
+
+🎁 Premiação:
+
+3 Sorteios de R$ 100,00.
+
+Presente Surpresa para os 3 maiores compradores!
+ 💕</p>
   <div class="prizes">
-    <div class="prize-badge gold">🥇 1º lugar — R$100 + surpresa</div>
-    <div class="prize-badge">🥈 2º — R$100</div>
-    <div class="prize-badge">🥉 3º — R$100</div>
+    <div class="prize-badge gold"> 1º lugar — Presente surpresa</div>
+    <div class="prize-badge"> 2º — Presente surpresa</div>
+    <div class="prize-badge"> 3º — Presente surpresa</div>
   </div>
 </div>
 
@@ -264,6 +274,32 @@ footer{text-align:center;padding:20px;font-size:12px;color:var(--muted)}
     </div>
   </div>
 
+  <!-- BUSCA POR TELEFONE -->
+  <div class="ranking-card" style="margin-bottom:16px;">
+    <div class="ranking-header">
+      <span style="font-size:22px;">🔍</span>
+      <div>
+        <div class="ranking-title">Consultar meus números</div>
+        <div class="ranking-sub">Digite seu telefone para ver seus números</div>
+      </div>
+    </div>
+    <div style="padding:16px;">
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input type="tel" id="buscaTel"
+          placeholder="Ex: 81984286433"
+          maxlength="15"
+          style="flex:1;border:2px solid #f0d6fa;border-radius:12px;padding:10px 14px;font-size:14px;font-family:inherit;outline:none;"
+          onkeydown="if(event.key==='Enter') buscarPorTel()">
+        <button onclick="buscarPorTel()"
+          style="background:linear-gradient(135deg,#f72585,#c9184a);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-size:14px;font-weight:800;font-family:inherit;cursor:pointer;white-space:nowrap;">
+          Buscar
+        </button>
+      </div>
+      <div id="buscaResult"></div>
+    </div>
+  </div>
+
+  <!-- RANKING -->
   <div class="ranking-card">
     <div class="ranking-header">
       <span style="font-size:22px;">🏆</span>
@@ -448,12 +484,28 @@ function renderRanking() {
   var prizes=['🥇 R$100 + Surpresa','🥈 R$100','🥉 R$100'];
   var pc=['prize-1','prize-2','prize-3'], rc=['rank-1','rank-2','rank-3'];
   el.innerHTML=list.map(function(p,i){
+    var seusNums=Object.entries(numbersState)
+      .filter(function(e){return e[1].status==='sold'&&e[1].phone===p.phone;})
+      .map(function(e){return parseInt(e[0]);})
+      .sort(function(a,b){return a-b;});
+    var numsHtml=seusNums.length>0
+      ?'<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:5px;">'+
+          seusNums.map(function(n){
+            return '<span style="background:#f72585;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;">'+n+'</span>';
+          }).join('')+
+        '</div>'
+      :'';
     return '<div class="rank-item">'+
       '<div class="rank-num '+(rc[i]||'rank-other')+'">'+(i+1)+'</div>'+
-      '<div class="rank-info"><div class="rank-name">'+fmtName(p.name)+'</div>'+
-      '<div class="rank-phone">📱 '+fmtPhone(p.phone)+'</div></div>'+
-      '<div class="rank-qty">'+p.qty+' nº</div>'+
-      (i<3?'<div class="rank-prize '+pc[i]+'">'+prizes[i]+'</div>':'')+
+      '<div class="rank-info" style="flex:1;">'+
+        '<div class="rank-name">'+fmtName(p.name)+'</div>'+
+        '<div class="rank-phone">📱 '+fmtPhone(p.phone)+'</div>'+
+        numsHtml+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">'+
+        '<div class="rank-qty">'+p.qty+' nº</div>'+
+        (i<3?'<div class="rank-prize '+pc[i]+'">'+prizes[i]+'</div>':'')+
+      '</div>'+
     '</div>';
   }).join('');
 }
@@ -653,6 +705,59 @@ function copiarPix() {
     toast('Código PIX copiado!','green');
     setTimeout(function(){ btn.textContent='📋 Copiar código PIX'; },2200);
   }).catch(function(){ toast('Copie manualmente o código acima','pink'); });
+}
+
+// ════════════════════════════════════════════
+// BUSCA POR TELEFONE
+// ════════════════════════════════════════════
+function buscarPorTel() {
+  var tel = document.getElementById('buscaTel').value.replace(/\D/g,'');
+  var el  = document.getElementById('buscaResult');
+  if (!el) return;
+
+  if (tel.length < 8) {
+    el.innerHTML = '<div style="color:#f72585;font-size:13px;padding:8px;">⚠️ Digite um número de telefone válido.</div>';
+    return;
+  }
+
+  // Find all numbers sold to this phone
+  var meusNumeros = [];
+  var meuNome    = '';
+  Object.entries(numbersState).forEach(function(entry) {
+    var key = entry[0], s = entry[1];
+    if (s.status === 'sold' && String(s.phone).replace(/\D/g,'').endsWith(tel.slice(-8))) {
+      meusNumeros.push(parseInt(key));
+      if (!meuNome && s.name) meuNome = s.name;
+    }
+  });
+
+  if (!meusNumeros.length) {
+    el.innerHTML =
+      '<div style="background:#fff0f6;border:1px solid #ffb3c6;border-radius:10px;padding:14px;text-align:center;font-size:13px;color:#6b5e7e;">' +
+        '😿 Nenhum número encontrado para este telefone.' +
+      '</div>';
+    return;
+  }
+
+  meusNumeros.sort(function(a,b){return a-b;});
+  var total = meusNumeros.length * 10;
+
+  el.innerHTML =
+    '<div style="background:linear-gradient(135deg,#fff0f6,#fdf4ff);border:2px solid #f72585;border-radius:12px;padding:16px;">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">' +
+        '<span style="font-size:20px;">🐱</span>' +
+        '<div>' +
+          '<div style="font-weight:800;font-size:14px;color:#1a0a2e;">' + (meuNome || 'Participante') + '</div>' +
+          '<div style="font-size:12px;color:#6b5e7e;">' + meusNumeros.length + ' número' + (meusNumeros.length>1?'s':'') + ' · R$ ' + total.toFixed(2).replace('.',',') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:11px;font-weight:700;color:#f72585;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Seus números:</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;">' +
+        meusNumeros.map(function(n) {
+          return '<span style="background:#f72585;color:#fff;font-weight:800;font-size:12px;padding:4px 10px;border-radius:20px;">' + n + '</span>';
+        }).join('') +
+      '</div>' +
+    '</div>';
 }
 
 window.addEventListener('beforeunload', function(){
