@@ -481,7 +481,7 @@ function renderRanking() {
   var el=document.getElementById('rankingList');
   if(!el) return;
   if(!list.length) { el.innerHTML='<div class="rank-empty">Nenhuma compra ainda. Seja o primeiro! 🐾</div>'; return; }
-  var prizes=['🥇 R$100 + Surpresa','🥈 R$100','🥉 R$100'];
+  var prizes=['🥇 Presente Surpresa','🥈 Presente Surpresa','🥉 Presente Surpresa'];
   var pc=['prize-1','prize-2','prize-3'], rc=['rank-1','rank-2','rank-3'];
   el.innerHTML=list.map(function(p,i){
     var seusNums=Object.entries(numbersState)
