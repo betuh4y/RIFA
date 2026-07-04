@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐱 Rifa da Ava — Ajude a Gatinha!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink:#f72585; --pink-d:#c9184a; --pink-l:#ffb3c6; --pink-bg:#fff0f6;
+  --purple:#7209b7; --lilac:#e9d8fd; --gold:#f8961e; --green:#2dc653;
+  --ink:#1a0a2e; --muted:#6b5e7e; --surface:#ffffff; --bg:#fdf4ff;
+  --line:#f0d6fa; --r:12px; --r-lg:20px;
+  --sh-card:0 2px 12px rgba(247,37,133,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.hero{background:linear-gradient(160deg,#1a0a2e 0%,#4a0e6e 50%,#7b1fa2 100%);padding:40px 20px 56px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3C/g%3E%3C/svg%3E")}
+.hero-paw{position:absolute;font-size:36px;opacity:.08;animation:float 4s ease-in-out infinite}
+.hero-paw:nth-child(2){top:15px;left:5%;animation-delay:0s}
+.hero-paw:nth-child(3){top:20px;right:8%;animation-delay:.8s}
+.hero-paw:nth-child(4){bottom:30px;left:15%;animation-delay:1.6s;font-size:24px}
+.hero-paw:nth-child(5){bottom:20px;right:12%;animation-delay:2.4s;font-size:20px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.cat-emoji-hero{font-size:80px;display:block;margin:0 auto 16px;animation:float 3s ease-in-out infinite;position:relative}
+.cat-avatar{width:110px;height:110px;border-radius:50%;border:4px solid var(--pink);box-shadow:0 0 0 6px rgba(247,37,133,.25);margin:0 auto 16px;object-fit:cover;display:block;animation:float 3s ease-in-out infinite;position:relative}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(26px,6vw,42px);font-weight:700;color:#fff;letter-spacing:-.5px;margin-bottom:10px;position:relative}
+.hero h1 span{color:var(--pink-l)}
+.hero p{color:rgba(255,255,255,.75);font-size:15px;max-width:400px;margin:0 auto 24px;line-height:1.6;position:relative}
+.prizes{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;position:relative}
+.prize-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:700;color:#fff;backdrop-filter:blur(4px)}
+.prize-badge.gold{background:rgba(248,150,30,.25);border-color:rgba(248,150,30,.5);color:#ffd166}
+
+.progress-section{max-width:700px;margin:0 auto;padding:24px 16px 0}
+.progress-card{background:var(--surface);border-radius:var(--r-lg);padding:20px 24px;box-shadow:var(--sh-card);border:1px solid var(--line);margin-bottom:16px}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.progress-label{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.progress-count{font-size:22px;font-weight:900;color:var(--pink)}
+.progress-bar-track{background:var(--line);border-radius:100px;height:12px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--pink),var(--purple));transition:width .6s cubic-bezier(.4,0,.2,1)}
+.progress-sub{font-size:12px;color:var(--muted);margin-top:6px}
+
+.main{max-width:700px;margin:0 auto;padding:0 16px 60px}
+.step-card{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--line);box-shadow:var(--sh-card);margin-bottom:16px;overflow:hidden}
+.step-header{display:flex;align-items:center;gap:12px;padding:16px 20px;background:linear-gradient(135deg,var(--pink-bg),#fff);border-bottom:1px solid var(--line)}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--pink);color:#fff;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-title{font-weight:800;font-size:15px;color:var(--ink)}
+.step-body{padding:20px}
+
+input[type=text],input[type=tel]{width:100%;border:1.5px solid var(--line);border-radius:var(--r);padding:12px 14px;font-size:15px;font-family:inherit;color:var(--ink);background:var(--surface);outline:none;transition:border-color .15s;margin-bottom:12px}
+input:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(247,37,133,.12)}
+label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:5px}
+
+.legend{display:flex;gap:12px;font-size:12px;color:var(--muted);flex-wrap:wrap;margin-bottom:12px}
+.legend-dot{display:flex;align-items:center;gap:5px}
+.dot{width:14px;height:14px;border-radius:4px}
+.dot-free{background:var(--surface);border:2px solid var(--line)}
+.dot-selected{background:var(--pink)}
+.dot-reserved{background:#ddd}
+.dot-sold{background:var(--purple)}
+
+.numbers-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:16px}
+.num-btn{aspect-ratio:1;border:2px solid var(--line);border-radius:8px;background:var(--surface);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .12s ease;display:flex;align-items:center;justify-content:center;user-select:none;font-family:'Space Grotesk',monospace}
+.num-btn:hover:not([disabled]){border-color:var(--pink);color:var(--pink);transform:scale(1.1)}
+.num-btn.selected{background:var(--pink);border-color:var(--pink);color:#fff;transform:scale(1.08);box-shadow:0 4px 12px rgba(247,37,133,.35)}
+.num-btn.reserved{background:#f5f5f5;border-color:#ddd;color:#ccc;cursor:not-allowed}
+.num-btn.sold{background:var(--lilac);border-color:var(--purple);color:var(--purple);cursor:not-allowed}
+
+.selected-info{background:var(--pink-bg);border:1.5px solid var(--pink-l);border-radius:var(--r);padding:12px 16px;margin-bottom:16px;font-size:14px;display:none}
+.selected-info.show{display:block}
+.selected-nums{font-weight:800;color:var(--pink)}
+.selected-total{font-size:20px;font-weight:900;color:var(--pink-d);margin-top:4px}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:none;border-radius:var(--r);font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;transition:all .15s ease;letter-spacing:.02em}
+.btn-pink{background:linear-gradient(135deg,var(--pink),var(--pink-d));color:#fff;box-shadow:0 6px 20px rgba(247,37,133,.35)}
+.btn-pink:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(247,37,133,.4)}
+.btn-pink:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-outline{background:transparent;border:2px solid var(--line);color:var(--muted);margin-top:8px}
+.btn-outline:hover{border-color:var(--pink);color:var(--pink)}
+
+.pix-panel{background:linear-gradient(135deg,#0d1b2a,#1b2d4a);border-radius:var(--r-lg);overflow:hidden;margin-bottom:16px;display:none}
+.pix-panel.show{display:block}
+.pix-top{padding:16px 20px;background:linear-gradient(135deg,#0077b6,#00b4d8);display:flex;align-items:center;gap:10px;color:#fff}
+.pix-top-icon{font-size:24px}
+.pix-top-title{font-weight:800;font-size:14px}
+.pix-top-sub{font-size:12px;opacity:.8}
+.pix-body{padding:20px}
+.pix-qr-wrap{text-align:center;margin-bottom:16px}
+.pix-qr-img{width:190px;height:190px;border-radius:12px;border:3px solid rgba(255,255,255,.15);display:block;margin:0 auto 8px}
+.pix-qr-label{font-size:12px;color:rgba(255,255,255,.6)}
+.pix-code-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.pix-code-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.pix-code-text{font-family:monospace;font-size:11px;color:rgba(255,255,255,.85);word-break:break-all;line-height:1.7;max-height:52px;overflow:hidden}
+.btn-copy{width:100%;padding:11px;background:rgba(0,180,216,.25);border:1.5px solid rgba(0,180,216,.5);border-radius:10px;color:#00d4ff;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;margin-bottom:12px;transition:background .15s}
+.btn-copy:hover{background:rgba(0,180,216,.4)}
+.pix-timer{text-align:center;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:12px}
+.pix-timer span{color:#ffd166;font-weight:700;font-size:16px}
+.pix-waiting{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:rgba(255,255,255,.55);margin-top:8px}
+.spin-dots{display:flex;gap:4px}
+.spin-dot{width:7px;height:7px;border-radius:50%;background:#00b4d8;animation:blink 1.4s ease-in-out infinite}
+.spin-dot:nth-child(2){animation-delay:.2s}
+.spin-dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.pix-loading{padding:28px;text-align:center;color:rgba(255,255,255,.7);display:none}
+.pix-loading.show{display:block}
+.spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,.15);border-top-color:#00b4d8;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pix-paid{display:none;padding:20px;text-align:center}
+.pix-paid.show{display:block}
+.pix-paid-icon{font-size:52px;margin-bottom:10px}
+.pix-paid-title{font-size:18px;font-weight:900;color:#2dc653;margin-bottom:6px}
+.pix-paid-sub{font-size:13px;color:rgba(255,255,255,.6)}
+
+.ranking-card{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--line);box-shadow:var(--sh-card);overflow:hidden;margin-bottom:16px}
+.ranking-header{padding:16px 20px;background:linear-gradient(135deg,#1a0a2e,#4a0e6e);color:#fff;display:flex;align-items:center;gap:10px}
+.ranking-title{font-weight:800;font-size:15px}
+.ranking-sub{font-size:12px;opacity:.7}
+.ranking-list{padding:12px}
+.rank-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--r);margin-bottom:6px;transition:background .12s}
+.rank-item:hover{background:var(--pink-bg)}
+.rank-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex-shrink:0}
+.rank-1{background:linear-gradient(135deg,#f8961e,#f3722c);color:#fff}
+.rank-2{background:linear-gradient(135deg,#adb5bd,#6c757d);color:#fff}
+.rank-3{background:linear-gradient(135deg,#cd7f32,#a0522d);color:#fff}
+.rank-other{background:var(--line);color:var(--muted)}
+.rank-info{flex:1}
+.rank-name{font-weight:800;font-size:14px;color:var(--ink)}
+.rank-phone{font-size:12px;color:var(--muted);margin-top:1px}
+.rank-qty{font-size:13px;font-weight:800;color:var(--pink);background:var(--pink-bg);padding:4px 10px;border-radius:100px;white-space:nowrap}
+.rank-prize{font-size:12px;font-weight:700;padding:4px 10px;border-radius:100px;white-space:nowrap}
+.prize-1{background:rgba(248,150,30,.15);color:#c8690a}
+.prize-2{background:rgba(173,181,189,.2);color:#495057}
+.prize-3{background:rgba(205,127,50,.15);color:#7a4010}
+.rank-empty{text-align:center;padding:24px;color:var(--muted);font-size:14px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:#fff;padding:12px 22px;border-radius:100px;font-size:14px;font-weight:700;z-index:9999;transition:transform .3s ease;white-space:nowrap;max-width:90vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.green{background:var(--green)}
+.toast.pink{background:var(--pink)}
+
+.overlay{position:fixed;inset:0;background:rgba(26,10,46,.7);backdrop-filter:blur(4px);z-index:5000;display:none;align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.modal-box{background:var(--surface);border-radius:var(--r-lg);padding:28px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(26,10,46,.4);animation:popIn .25s ease}
+@keyframes popIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-title{font-size:18px;font-weight:900;color:var(--ink);margin-bottom:8px}
+.modal-sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.7}
+
+footer{text-align:center;padding:20px;font-size:12px;color:var(--muted)}
+@media(max-width:480px){.numbers-grid{gap:3px}.num-btn{font-size:9px;border-radius:5px}}
+</style>
+<!-- Firebase carregado no head para garantir disponibilidade -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-paw">🐾</span>
+  <span class="hero-paw">🐾</span>
+  <span class="hero-paw">🐾</span>
+  <span class="hero-paw">🐾</span>
+  <!-- Para usar foto: <img class="cat-avatar" src="URL_DA_FOTO_DA_AVA"> -->
+  <span class="cat-emoji-hero">🐱</span>
+  <h1>Rifa da <span>Ava</span></h1>
+  <p>Cada número vale R$&nbsp;10 · Ajude a garantir os cuidados da nossa gatinha querida 💕</p>
+  <div class="prizes">
+    <div class="prize-badge gold">🥇 1º lugar — R$100 + surpresa</div>
+    <div class="prize-badge">🥈 2º — R$100</div>
+    <div class="prize-badge">🥉 3º — R$100</div>
+  </div>
+</div>
+
+<div class="progress-section">
+  <div class="progress-card">
+    <div class="progress-header">
+      <span class="progress-label">Números vendidos</span>
+      <span class="progress-count"><span id="soldCount">0</span>/250</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-sub">Arrecadado: <strong id="arrecadado">R$ 0,00</strong> · Cada número: R$ 10,00</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="step-card" id="step1">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div><div class="step-title">Seus dados</div></div>
+    </div>
+    <div class="step-body">
+      <label for="inputNome">Nome completo</label>
+      <input type="text" id="inputNome" placeholder="Ex: Maria Silva" maxlength="80" autocomplete="name">
+      <label for="inputTel">WhatsApp (com DDD, só números)</label>
+      <input type="tel" id="inputTel" placeholder="Ex: 81984286433" maxlength="15" autocomplete="tel">
+      <button class="btn btn-pink" onclick="continuar()">Continuar → Escolher números</button>
+    </div>
+  </div>
+
+  <div class="step-card" id="step2" style="display:none;">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div><div class="step-title">Escolha seus números da sorte</div></div>
+    </div>
+    <div class="step-body">
+      <div class="legend">
+        <div class="legend-dot"><div class="dot dot-free"></div> Livre</div>
+        <div class="legend-dot"><div class="dot dot-selected"></div> Selecionado</div>
+        <div class="legend-dot"><div class="dot dot-reserved"></div> Reservado</div>
+        <div class="legend-dot"><div class="dot dot-sold"></div> Pago</div>
+      </div>
+      <div class="numbers-grid" id="numbersGrid"></div>
+      <div class="selected-info" id="selectedInfo">
+        Selecionados: <span class="selected-nums" id="selectedNums">—</span><br>
+        <div class="selected-total" id="selectedTotal">R$ 0,00</div>
+      </div>
+      <button class="btn btn-pink" id="btnPagar" onclick="abrirModal()" disabled>
+        ⚡ Gerar PIX e Pagar
+      </button>
+      <button class="btn btn-outline" onclick="voltarStep1()">← Alterar dados</button>
+    </div>
+  </div>
+
+  <div class="pix-panel" id="pixPanel">
+    <div class="pix-top">
+      <span class="pix-top-icon">⚡</span>
+      <div>
+        <div class="pix-top-title">PIX via Mercado Pago</div>
+        <div class="pix-top-sub">Escaneie ou copie o código abaixo</div>
+      </div>
+    </div>
+    <div id="pixLoading" class="pix-loading">
+      <div class="spinner"></div>
+      Gerando seu PIX...
+    </div>
+    <div id="pixQrSection" style="display:none;" class="pix-body">
+      <div class="pix-qr-wrap">
+        <img id="pixQrImg" class="pix-qr-img" src="" alt="QR Code PIX">
+        <div class="pix-qr-label">Escaneie com o app do banco</div>
+      </div>
+      <div class="pix-code-box">
+        <div class="pix-code-label">PIX Copia e Cola</div>
+        <div class="pix-code-text" id="pixCode"></div>
+      </div>
+      <button class="btn-copy" id="btnCopy" onclick="copiarPix()">📋 Copiar código PIX</button>
+      <div class="pix-timer">Expira em <span id="pixTimer">10:00</span></div>
+      <div class="pix-waiting">
+        <div class="spin-dots">
+          <span class="spin-dot"></span><span class="spin-dot"></span><span class="spin-dot"></span>
+        </div>
+        &nbsp;Aguardando pagamento...
+      </div>
+    </div>
+    <div id="pixPaid" class="pix-paid">
+      <div class="pix-paid-icon">✅</div>
+      <div class="pix-paid-title">PIX Confirmado!</div>
+      <div class="pix-paid-sub">Seus números foram registrados. Boa sorte! 🐱</div>
+    </div>
+  </div>
+
+  <div class="ranking-card">
+    <div class="ranking-header">
+      <span style="font-size:22px;">🏆</span>
+      <div>
+        <div class="ranking-title">Ranking de Compradores</div>
+        <div class="ranking-sub">Quem mais apoia a Ava</div>
+      </div>
+    </div>
+    <div class="ranking-list" id="rankingList">
+      <div class="rank-empty">Nenhuma compra ainda. Seja o primeiro! 🐾</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Rifa sorteada quando todos os 250 números forem vendidos · Número sorteado ao vivo 🎲<br>
+  Pagamento seguro via <strong>Mercado Pago</strong>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<div class="overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">Confirmar compra</div>
+    <div class="modal-sub" id="modalSub"></div>
+    <button class="btn btn-pink" onclick="confirmarModal()">Confirmar e Pagar PIX</button>
+    <button class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// CONFIGURAÇÃO — troque pela URL do seu Vercel
+// ════════════════════════════════════════════
+const PIX_API_URL = '';
+// ^ Ex: https://rifa-ava-pix.vercel.app
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyDJBdK9I-jtg9ujTc9Xsxr-hnPfkId4wIU",
+  authDomain:        "pdv1-77632.firebaseapp.com",
+  databaseURL:       "https://pdv1-77632-default-rtdb.firebaseio.com",
+  projectId:         "pdv1-77632",
+  storageBucket:     "pdv1-77632.firebasestorage.app",
+  messagingSenderId: "246033791117",
+  appId:             "1:246033791117:web:7b70b511ea8d8c5ba1cac4"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ════════════════════════════════════════════
+// ESTADO
+// ════════════════════════════════════════════
+var userName     = '';
+var userPhone    = '';
+var selectedNums = new Set();
+var numbersState = {};
+var pixPayId     = null;
+var pixPollTimer = null;
+var pixCountdown = null;
+var reserveTimers = {};
+
+// ════════════════════════════════════════════
+// FIREBASE — escuta em tempo real
+// ════════════════════════════════════════════
+db.ref('rifa/numeros').on('value', function(snap) {
+  numbersState = snap.exists() ? snap.val() : {};
+  renderGrid();
+  renderProgress();
+  renderRanking();
+});
+
+// ════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════
+function pad(n) { return String(n).padStart(3,'0'); }
+function fmtPhone(p) { var d=String(p).replace(/\D/g,''); return d.slice(0,2)+'****'+d.slice(-2); }
+function fmtName(n) { var p=n.trim().split(/\s+/); return p.length===1?p[0]:p[0]+' '+p[p.length-1][0]+'.'; }
+function toast(msg, type) {
+  var el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast show '+(type||'');
+  clearTimeout(el._t); el._t=setTimeout(function(){ el.className='toast'; },2800);
+}
+
+// ════════════════════════════════════════════
+// GRID DE NÚMEROS
+// ════════════════════════════════════════════
+function renderGrid() {
+  var grid=document.getElementById('numbersGrid');
+  if (!grid) return;
+  grid.innerHTML='';
+  for (var i=1;i<=250;i++) {
+    var key=pad(i), state=numbersState[key]||{status:'free'};
+    var btn=document.createElement('button');
+    btn.className='num-btn'; btn.textContent=String(i); btn.dataset.key=key;
+    if (state.status==='sold') {
+      btn.classList.add('sold'); btn.disabled=true; btn.title='Pago ✓';
+    } else if (state.status==='reserved') {
+      if (state.phone===userPhone && selectedNums.has(key)) {
+        btn.classList.add('selected');
+        (function(k,b){ b.onclick=function(){ toggleNum(k,b); }; })(key,btn);
+      } else {
+        btn.classList.add('reserved'); btn.disabled=true; btn.title='Reservado (expira em breve)';
+      }
+    } else {
+      if (selectedNums.has(key)) btn.classList.add('selected');
+      (function(k,b){ b.onclick=function(){ toggleNum(k,b); }; })(key,btn);
+    }
+    grid.appendChild(btn);
+  }
+  updateSelectedInfo();
+}
+
+function toggleNum(key,btn) {
+  if (selectedNums.has(key)) {
+    selectedNums.delete(key); btn.classList.remove('selected');
+    var s=numbersState[key];
+    if (s&&s.status==='reserved'&&s.phone===userPhone) db.ref('rifa/numeros/'+key).remove();
+  } else {
+    if (selectedNums.size>=20) { toast('Máximo de 20 números por compra!','pink'); return; }
+    selectedNums.add(key); btn.classList.add('selected');
+    reservarNumero(key);
+  }
+  updateSelectedInfo();
+}
+
+function reservarNumero(key) {
+  db.ref('rifa/numeros/'+key).set({ status:'reserved', phone:userPhone, name:userName, reservedAt:Date.now() });
+  clearTimeout(reserveTimers[key]);
+  reserveTimers[key]=setTimeout(function(){
+    db.ref('rifa/numeros/'+key).once('value').then(function(snap){
+      if (snap.exists()&&snap.val().status==='reserved'&&snap.val().phone===userPhone) {
+        db.ref('rifa/numeros/'+key).remove();
+        selectedNums.delete(key);
+        toast('Número '+parseInt(key)+' expirou — voltou ao estoque','pink');
+        renderGrid();
+      }
+    });
+  }, 10*60*1000);
+}
+
+function updateSelectedInfo() {
+  var info=document.getElementById('selectedInfo');
+  var nums=document.getElementById('selectedNums');
+  var total=document.getElementById('selectedTotal');
+  var btn=document.getElementById('btnPagar');
+  if (!info) return;
+  if (selectedNums.size===0) { info.classList.remove('show'); if(btn) btn.disabled=true; return; }
+  info.classList.add('show');
+  var sorted=Array.from(selectedNums).map(function(k){return parseInt(k);}).sort(function(a,b){return a-b;});
+  nums.textContent=sorted.join(', ');
+  total.textContent='Total: R$ '+(selectedNums.size*10).toFixed(2).replace('.',',');
+  if (btn) btn.disabled=false;
+}
+
+// ════════════════════════════════════════════
+// PROGRESSO
+// ════════════════════════════════════════════
+function renderProgress() {
+  var sold=Object.values(numbersState).filter(function(s){return s.status==='sold';}).length;
+  var sc=document.getElementById('soldCount'), pf=document.getElementById('progressFill'), ar=document.getElementById('arrecadado');
+  if(sc) sc.textContent=sold;
+  if(pf) pf.style.width=(sold/250*100).toFixed(1)+'%';
+  if(ar) ar.textContent='R$ '+(sold*10).toFixed(2).replace('.',',');
+}
+
+// ════════════════════════════════════════════
+// RANKING
+// ════════════════════════════════════════════
+function renderRanking() {
+  var map={};
+  Object.values(numbersState).forEach(function(s){
+    if(s.status!=='sold') return;
+    if(!map[s.phone]) map[s.phone]={name:s.name,phone:s.phone,qty:0};
+    map[s.phone].qty++;
+  });
+  var list=Object.values(map).sort(function(a,b){return b.qty-a.qty;}).slice(0,10);
+  var el=document.getElementById('rankingList');
+  if(!el) return;
+  if(!list.length) { el.innerHTML='<div class="rank-empty">Nenhuma compra ainda. Seja o primeiro! 🐾</div>'; return; }
+  var prizes=['🥇 R$100 + Surpresa','🥈 R$100','🥉 R$100'];
+  var pc=['prize-1','prize-2','prize-3'], rc=['rank-1','rank-2','rank-3'];
+  el.innerHTML=list.map(function(p,i){
+    return '<div class="rank-item">'+
+      '<div class="rank-num '+(rc[i]||'rank-other')+'">'+(i+1)+'</div>'+
+      '<div class="rank-info"><div class="rank-name">'+fmtName(p.name)+'</div>'+
+      '<div class="rank-phone">📱 '+fmtPhone(p.phone)+'</div></div>'+
+      '<div class="rank-qty">'+p.qty+' nº</div>'+
+      (i<3?'<div class="rank-prize '+pc[i]+'">'+prizes[i]+'</div>':'')+
+    '</div>';
+  }).join('');
+}
+
+// ════════════════════════════════════════════
+// STEP 1
+// ════════════════════════════════════════════
+function continuar() {
+  var nome=document.getElementById('inputNome').value.trim();
+  var tel=document.getElementById('inputTel').value.replace(/\D/g,'');
+  if(nome.length<3){ toast('Informe seu nome completo','pink'); return; }
+  if(tel.length<10){ toast('Informe seu WhatsApp com DDD','pink'); return; }
+  userName=nome; userPhone=tel;
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  renderGrid();
+  toast('Olá, '+nome.split(' ')[0]+'! Escolha seus números 🎉','green');
+}
+
+function voltarStep1() {
+  selectedNums.forEach(function(key){
+    db.ref('rifa/numeros/'+key).once('value').then(function(snap){
+      if(snap.exists()&&snap.val().status==='reserved'&&snap.val().phone===userPhone)
+        db.ref('rifa/numeros/'+key).remove();
+    });
+  });
+  selectedNums.clear();
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step1').style.display='block';
+  document.getElementById('pixPanel').classList.remove('show');
+  stopPix();
+}
+
+// ════════════════════════════════════════════
+// MODAL
+// ════════════════════════════════════════════
+function abrirModal() {
+  if(!selectedNums.size) return;
+  var sorted=Array.from(selectedNums).map(function(k){return parseInt(k);}).sort(function(a,b){return a-b;});
+  var valor=selectedNums.size*10;
+  document.getElementById('modalTitle').textContent='Confirmar '+selectedNums.size+' número'+(selectedNums.size>1?'s':'');
+  document.getElementById('modalSub').innerHTML=
+    '<strong>'+userName+'</strong><br>📱 '+userPhone+'<br><br>'+
+    'Números: <strong>'+sorted.join(', ')+'</strong><br><br>'+
+    '<span style="font-size:20px;font-weight:900;color:var(--pink)">Total: R$ '+valor.toFixed(2).replace('.',',')+'</span>';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function fecharModal(){ document.getElementById('modalOverlay').classList.remove('show'); }
+function confirmarModal(){ fecharModal(); chamarPixApi(); }
+
+// ════════════════════════════════════════════
+// PIX API — usa o mesmo backend do PDV
+// ════════════════════════════════════════════
+function chamarPixApi() {
+  var valor=selectedNums.size*10;
+  var sorted=Array.from(selectedNums).map(function(k){return parseInt(k);}).sort(function(a,b){return a-b;});
+  var descricao='Rifa Ava - Nums: '+sorted.join(',')+' - '+userName;
+
+  // Mostra painel de loading
+  document.getElementById('pixPanel').classList.add('show');
+  document.getElementById('pixPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('pixLoading').classList.add('show');
+  document.getElementById('pixQrSection').style.display='none';
+  document.getElementById('pixPaid').classList.remove('show');
+  document.getElementById('btnPagar').disabled=true;
+
+  // Chama /api/criar-pix no Vercel (mesmo backend do PDV)
+  fetch(PIX_API_URL+'/api/criar-pix', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ amount:valor, description:descricao })
+  })
+  .then(function(res){ return res.json().then(function(data){ return {ok:res.ok,data:data}; }); })
+  .then(function(r){
+    if(!r.ok) throw new Error(r.data.error||'Erro ao gerar PIX');
+    var d=r.data;
+    pixPayId=d.paymentId;
+
+    // QR Code: usa base64 se disponível, senão gera via serviço público
+    var img=document.getElementById('pixQrImg');
+    img.src=d.qrBase64
+      ? 'data:image/png;base64,'+d.qrBase64
+      : 'https://api.qrserver.com/v1/create-qr-code/?size=190x190&data='+encodeURIComponent(d.qrCode);
+
+    document.getElementById('pixCode').textContent=d.qrCode;
+    document.getElementById('pixLoading').classList.remove('show');
+    document.getElementById('pixQrSection').style.display='block';
+
+    iniciarTimer(10*60); // 10 minutos
+    iniciarPoll();       // verifica aprovação a cada 4s
+  })
+  .catch(function(err){
+    document.getElementById('pixLoading').classList.remove('show');
+    document.getElementById('pixPanel').classList.remove('show');
+    document.getElementById('btnPagar').disabled=false;
+    toast('Erro: '+(err.message||'Tente novamente'),'pink');
+  });
+}
+
+// ════════════════════════════════════════════
+// TIMER E POLLING
+// ════════════════════════════════════════════
+function iniciarTimer(seconds) {
+  clearInterval(pixCountdown);
+  var s=seconds, el=document.getElementById('pixTimer');
+  function tick(){
+    var m=Math.floor(s/60), sec=s%60;
+    if(el) el.textContent=m+':'+(sec<10?'0':'')+sec;
+    if(s<=0){ clearInterval(pixCountdown); toast('PIX expirado. Selecione os números novamente.','pink'); stopPix(); }
+    s--;
+  }
+  tick(); pixCountdown=setInterval(tick,1000);
+}
+
+function iniciarPoll() {
+  clearInterval(pixPollTimer);
+  pixPollTimer=setInterval(function(){
+    if(!pixPayId) return;
+    // Chama /api/status-pix?id=XXX no mesmo Vercel
+    fetch(PIX_API_URL+'/api/status-pix?id='+pixPayId)
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if(data.approved||data.status==='approved'){
+          clearInterval(pixPollTimer);
+          clearInterval(pixCountdown);
+          confirmarCompra();
+        }
+      })
+      .catch(function(){});
+  }, 4000);
+}
+
+// ════════════════════════════════════════════
+// CONFIRMAÇÃO NO FIREBASE
+// ════════════════════════════════════════════
+function confirmarCompra() {
+  var updates={};
+  selectedNums.forEach(function(key){
+    updates['rifa/numeros/'+key]={ status:'sold', phone:userPhone, name:userName, soldAt:Date.now() };
+  });
+  db.ref().update(updates);
+
+  // Histórico da compra
+  db.ref('rifa/compras/'+Date.now()+'_'+userPhone).set({
+    name:userName, phone:userPhone,
+    numbers:Array.from(selectedNums).map(function(k){return parseInt(k);}).sort(function(a,b){return a-b;}),
+    valor:selectedNums.size*10, payId:pixPayId, paidAt:Date.now()
+  });
+
+  // Limpar timers de reserva
+  selectedNums.forEach(function(k){ clearTimeout(reserveTimers[k]); });
+
+  // Som de sucesso 🎵
+  try {
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [523,659,784,1047].forEach(function(f,i){
+      var osc=ctx.createOscillator(), g=ctx.createGain();
+      osc.connect(g); g.connect(ctx.destination);
+      osc.frequency.value=f;
+      g.gain.setValueAtTime(0.2,ctx.currentTime+i*.12);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*.12+.25);
+      osc.start(ctx.currentTime+i*.12); osc.stop(ctx.currentTime+i*.12+.25);
+    });
+  } catch(e){}
+
+  document.getElementById('pixQrSection').style.display='none';
+  document.getElementById('pixPaid').classList.add('show');
+  toast('🎉 Números confirmados! Boa sorte!','green');
+  selectedNums.clear(); pixPayId=null;
+
+  setTimeout(function(){
+    document.getElementById('pixPanel').classList.remove('show');
+    document.getElementById('pixPaid').classList.remove('show');
+    document.getElementById('step2').style.display='none';
+    document.getElementById('step1').style.display='block';
+    document.getElementById('inputNome').value='';
+    document.getElementById('inputTel').value='';
+    renderGrid();
+  }, 4000);
+}
+
+function stopPix() {
+  clearInterval(pixPollTimer); clearInterval(pixCountdown); pixPayId=null;
+  var el=function(id){return document.getElementById(id);};
+  el('pixLoading').classList.remove('show');
+  el('pixQrSection').style.display='none';
+  el('pixPaid').classList.remove('show');
+  el('pixPanel').classList.remove('show');
+  var bp=el('btnPagar'); if(bp) bp.disabled=(selectedNums.size===0);
+}
+
+function copiarPix() {
+  var code=document.getElementById('pixCode').textContent;
+  navigator.clipboard.writeText(code).then(function(){
+    var btn=document.getElementById('btnCopy');
+    btn.textContent='✅ Copiado!';
+    toast('Código PIX copiado!','green');
+    setTimeout(function(){ btn.textContent='📋 Copiar código PIX'; },2200);
+  }).catch(function(){ toast('Copie manualmente o código acima','pink'); });
+}
+
+window.addEventListener('beforeunload', function(){
+  selectedNums.forEach(function(key){
+    var s=numbersState[key];
+    if(s&&s.status==='reserved'&&s.phone===userPhone) db.ref('rifa/numeros/'+key).remove();
+  });
+});
+</script>
+</body>
+</html>
