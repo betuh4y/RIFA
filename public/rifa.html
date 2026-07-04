@@ -164,20 +164,16 @@ footer{text-align:center;padding:20px;font-size:12px;color:var(--muted)}
   <span class="hero-paw">🐾</span>
   <span class="hero-paw">🐾</span>
   <!-- Para usar foto: <img class="cat-avatar" src="URL_DA_FOTO_DA_AVA"> -->
- <span class="cat-emoji-hero">
-  <img class="cat-avatar" src="https://i.postimg.cc/0y9JMsrz/Whats-App-Image-2026-06-30-at-09-37-32.jpg" alt="Foto da minha gata">
-</span>
+  <span class="cat-emoji-hero">🐱</span>
   <h1>Rifa da <span>Ava</span></h1>
-  <p>ATENÇÃO COLOQUE CORRETAMENTE SEU NOME E NÚMERO DE TELEFONE.
-Cada número custa R$ 10,00.
+  <p>Cada número vale R$&nbsp;10 · Ajude a garantir os cuidados da nossa gatinha querida 💕</p>
+  <div class="prizes">
+    <div class="prize-badge gold">🥇</div>
+    <div class="prize-badge">🥈 </div>
+    <div class="prize-badge">🥉 </div>
+  </div>
+</div>
 
-🎁 Premiação:
-
-3 Sorteios de R$ 100,00.
-
-
- 💕</p>
- 
 <div class="progress-section">
   <div class="progress-card">
     <div class="progress-header">
@@ -475,7 +471,7 @@ function renderRanking() {
   var el=document.getElementById('rankingList');
   if(!el) return;
   if(!list.length) { el.innerHTML='<div class="rank-empty">Nenhuma compra ainda. Seja o primeiro! 🐾</div>'; return; }
-  var prizes=['🥇 Presente Surpresa','🥈 Presente Surpresa','🥉 Presente Surpresa'];
+  var prizes=['🥇 R$100 + Surpresa','🥈 R$100','🥉 R$100'];
   var pc=['prize-1','prize-2','prize-3'], rc=['rank-1','rank-2','rank-3'];
   el.innerHTML=list.map(function(p,i){
     var seusNums=Object.entries(numbersState)
